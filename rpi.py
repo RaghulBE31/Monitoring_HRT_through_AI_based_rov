@@ -1,33 +1,33 @@
-from flask import Flask, request, jsonify
+import cv2
 import os
+import urllib.request
+import numpy as np
 
-app = Flask(__name__)
+url = 'http://192.168.137.122/capture'
+output_folder = 'dataset'
 
-# Directory to save images
-IMAGE_DIR = "images"
-if not os.path.exists(IMAGE_DIR):
-    os.makedirs(IMAGE_DIR)
+if not os.path.exists(output_folder):
+    os.makedirs(output_folder)
 
-@app.route('/upload_image', methods=['POST'])
-def upload_image():
-    img_data = request.data
-    img_name = f"image_{len(os.listdir(IMAGE_DIR)) + 1}.jpg"
-    img_path = os.path.join(IMAGE_DIR, img_name)
+counter = 0
 
-    with open(img_path, 'wb') as f:
-        f.write(img_data)
+while True:
+    img_resp = urllib.request.urlopen(url)
+    img_np = np.array(bytearray(img_resp.read()), dtype=np.uint8)
+    frame = cv2.imdecode(img_np, -1)
 
-    return "Image uploaded successfully", 200
+    cv2.imshow('Video', frame)
 
-@app.route('/sensor_data', methods=['POST'])
-def sensor_data():
-    data = request.json
-    distance = data.get('distance', None)
-    
-    # You can process the distance data as needed
-    print(f"Received distance data: {distance}")
+    # Save the current frame automatically
+    counter += 1
+    image_filename = os.path.join(output_folder, f'imGaea_{counter}.jpg')  # Updated filename format
+    cv2.imwrite(image_filename, frame)
+    print(f"Image {counter} saved as {image_filename}")
 
-    return jsonify({"status": "success"}), 200
+    # Press 'q' to quit the program
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord('q'):
+        break
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+cv2.destroyAllWindows()
+
