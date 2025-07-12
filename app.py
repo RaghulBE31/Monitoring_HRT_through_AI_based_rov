@@ -7,7 +7,7 @@ import RPi.GPIO as GPIO
 app = Flask(__name__)
 UPLOAD_FOLDER = 'received_images'
 
-# === GPIO Setup ===
+
 GPIO.setmode(GPIO.BCM)
 MOTOR_PINS = {
     'left': (17, 18),    # IN1, IN2
