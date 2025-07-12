@@ -34,7 +34,7 @@ This project focuses on developing an **AI-powered Remotely Operated Vehicle (RO
 |------------------------|----------------------------------------|
 | **ESP32-CAM**          | Live camera stream                     |
 | **Raspberry Pi**       | Central control + AI + web server      |
-| water pumps**          | For boyance                            |
+| **water pumps**        | For boyance                            |
 | **2 DC Motors**        | Movement of ROV                        |
 | **Power Supply**       | Battery or 5V USB for Pi and ESP32     |
 | **Jumper Wires**       | Connections to GPIO/motors             |
