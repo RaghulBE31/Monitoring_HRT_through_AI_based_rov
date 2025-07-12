@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ROV Monitoring Dashboard</title>
+    <style>
+        body { font-family: Arial; text-align: center; }
+        img, iframe { max-width: 80%; height: auto; border: 1px solid #ccc; margin-top: 20px; }
+        button { padding: 10px 20px; margin: 10px; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <h1>ROV Monitoring Dashboard</h1>
+    <p><strong>Detection Result:</strong> {{ result.status }} ({{ result.confidence }})</p>
+
+    <!-- MJPEG Stream from ESP32-CAM -->
+    <iframe src="http://192.168.4.1:81/stream" width="640" height="480" frameborder="0"></iframe>
+
+    <!-- Movement Buttons -->
+    <div>
+        <button onclick="sendCmd('forward')">Forward</button>
+        <button onclick="sendCmd('backward')">Backward</button>
+        <button onclick="sendCmd('left')">Left</button>
+        <button onclick="sendCmd('right')">Right</button>
+        <button onclick="sendCmd('stop')">Stop</button>
+    </div>
+
+    <script>
+        function sendCmd(cmd) {
+            fetch(`/send_command/${cmd}`)
+                .then(res => res.json())
+                .then(data => alert("Response: " + data.response))
+                .catch(err => alert("Command failed."));
+        }
+    </script>
+</body>
+</html>
